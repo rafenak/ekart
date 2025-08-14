@@ -1,0 +1,51 @@
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**
+!**/src/test/**
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+
+### VS Code ###
+.vscode/
+
+
+/.mvn/
+/mvnw
+/mvnw.cmd
+logfile
+
+.tool-versions
+.DS_Store
+
+### jenv ###
+.java-version
+
+### local database data ###
+postgres-data/
+
+### Exclude Spring Boot Profile ###
+src/main/resources/application-local.properties
+src/main/resources/application-cit.properties
+src/main/resources/application-prd.properties
+src/main/resources/application-stg.properties
