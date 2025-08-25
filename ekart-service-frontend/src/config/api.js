@@ -36,6 +36,7 @@ const apiClient = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  withCredentials: true, // Enable sending cookies with requests
 });
 
 // Request interceptor to add auth token
@@ -45,6 +46,10 @@ apiClient.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+    
+    // Add X-Requested-With header to help with CORS and CSRF
+    config.headers['X-Requested-With'] = 'XMLHttpRequest';
+    
     return config;
   },
   (error) => {
@@ -67,3 +72,23 @@ apiClient.interceptors.response.use(
 );
 
 export default apiClient;
+
+// Separate client for authentication requests that bypasses CSRF for now
+export const authApiClient = axios.create({
+  baseURL: API_BASE_URL,
+  timeout: 10000,
+  headers: {
+    'Content-Type': 'application/json',
+    'X-Requested-With': 'XMLHttpRequest',
+  },
+  withCredentials: true,
+});
+
+// Auth client doesn't need token interceptor as it's used for login/register
+authApiClient.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    console.error('Auth API Error:', error.response?.data || error.message);
+    return Promise.reject(error);
+  }
+);

@@ -157,9 +157,11 @@ cd ekart-service
 # Start databases and Keycloak
 docker-compose up -d
 
-# Wait for services to be ready
+# Setup Keycloak (automated setup with proper client configuration)
 ./setup-keycloak.sh
 ```
+
+**📖 For detailed Keycloak setup instructions, see [KEYCLOAK_SETUP.md](./KEYCLOAK_SETUP.md)**
 
 ### 3. **Build All Services**
 ```bash

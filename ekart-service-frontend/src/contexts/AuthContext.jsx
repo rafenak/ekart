@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { AuthContext } from './AuthContext';
-import apiClient from '../config/api';
+import { authApiClient } from '../config/api';
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
@@ -38,7 +38,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (credentials) => {
     try {
-      const response = await apiClient.post('/api/auth/login', credentials);
+      const response = await authApiClient.post('/api/auth/login', credentials);
       const { data } = response.data; // Backend wraps in ApiResponse with data field
       const { accessToken, refreshToken, user: userData } = data;
       
@@ -61,13 +61,28 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (userData) => {
     try {
-      const response = await apiClient.post('/api/auth/register', userData);
-      return { success: true, data: response.data };
+      const response = await authApiClient.post('/api/auth/register', userData);
+      
+      // Backend returns ApiResponse with success field
+      const { success, message, data } = response.data;
+      
+      if (success) {
+        return { success: true, data };
+      } else {
+        return { success: false, message: message || 'Registration failed' };
+      }
     } catch (error) {
       console.error('Registration failed:', error);
+      
+      // Check if error response has the same structure
+      const errorMessage = error.response?.data?.message || 
+                          error.response?.data?.error || 
+                          error.message || 
+                          'Registration failed';
+      
       return { 
         success: false, 
-        message: error.response?.data?.message || 'Registration failed' 
+        message: errorMessage
       };
     }
   };
